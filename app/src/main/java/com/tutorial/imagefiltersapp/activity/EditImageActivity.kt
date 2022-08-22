@@ -6,12 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.tutorial.imagefiltersapp.KEY_IMAGE_URI
-import com.tutorial.imagefiltersapp.R
 import com.tutorial.imagefiltersapp.databinding.ActivityEditImageBinding
-import java.io.InputStream
+import com.tutorial.imagefiltersapp.helper.displayToast
+import com.tutorial.imagefiltersapp.helper.show
+import com.tutorial.imagefiltersapp.viewModels.EditImageViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditImageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditImageBinding
+    private val viewModel: EditImageViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +22,9 @@ class EditImageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setListener()
-        displayImagePreview()
+        // 先將URI放到ViewModel設定狀態，再觀察LiveData的變化
+        setupObservers()
+        prepareImagePreview()
     }
 
     private fun setListener() {
@@ -28,12 +33,28 @@ class EditImageActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayImagePreview() {
+    // 設定觀察者，當狀態改變，產生對應動作
+    private fun setupObservers() {
+        viewModel.imagePreviewUiState.observe(this) {
+            val dataState = it ?: return@observe
+            binding.pbPreview.visibility =
+                if (dataState.isLoading == true) View.VISIBLE else View.GONE
+
+            dataState.bitmap?.let { bitmap ->
+                binding.imagePreview.setImageBitmap(bitmap)
+                binding.imagePreview.show()
+            } ?: kotlin.run {
+                dataState.error?.let { error ->
+                    displayToast(error)
+                }
+            }
+        }
+    }
+
+    // 導入照片 URI 至 viewModel 設定狀態
+    private fun prepareImagePreview() {
         intent.getParcelableExtra<Uri>(KEY_IMAGE_URI)?.let { imageUri ->
-            val inputStream = contentResolver.openInputStream(imageUri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            binding.imagePreview.setImageBitmap(bitmap)
-            binding.imagePreview.visibility = View.VISIBLE
+            viewModel.prepareImagePreview(imageUri)
         }
     }
 }

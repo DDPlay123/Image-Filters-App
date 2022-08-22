@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.tutorial.imagefiltersapp.KEY_IMAGE_URI
 import com.tutorial.imagefiltersapp.Request_PERMISSION
 import com.tutorial.imagefiltersapp.databinding.ActivityMainBinding
-import com.tutorial.imagefiltersapp.manager.ToastManager
+import com.tutorial.imagefiltersapp.helper.displayToast
 import com.tutorial.imagefiltersapp.utilities.Method
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Request_PERMISSION && grantResults.isNotEmpty())
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
-                ToastManager.instance.showToast(this, "沒有權限", true)
+                displayToast("沒有權限")
     }
 
     private fun setListener() {
