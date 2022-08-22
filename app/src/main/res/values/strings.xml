@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Image Filters App</string>
-    <string name="saved_images">儲存照片</string>
-    <string name="edit_new_image">編輯新照片</string>
+    <string name="saved_images">儲存相片</string>
+    <string name="edit_new_image">編輯新相片</string>
     <string name="image_filters_app">相片濾鏡 APP</string>
     <string name="let_we_start">讓我們開始吧！</string>
+    <string name="back">返回</string>
+    <string name="edit_image">編輯相片</string>
 </resources>

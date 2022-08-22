@@ -1,4 +1,4 @@
-package com.tutorial.imagefiltersapp
+package com.tutorial.imagefiltersapp.activity
 
 import android.content.Intent
 import android.os.Bundle
