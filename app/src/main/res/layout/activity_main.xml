@@ -6,13 +6,79 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_background" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_landing" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSavedImages"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:fontFamily="@font/ubuntu_medium"
+        android:includeFontPadding="false"
+        android:text="@string/saved_images"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12ssp"
+        app:backgroundTint="@color/buttonSavedImages"
+        app:cornerRadius="@dimen/_20sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnEditNewImage"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
+        android:fontFamily="@font/ubuntu_medium"
+        android:includeFontPadding="false"
+        android:text="@string/edit_new_image"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12ssp"
+        app:backgroundTint="@color/buttonEditNewImage"
+        app:cornerRadius="@dimen/_20sdp"
+        app:layout_constraintBottom_toTopOf="@id/btnSavedImages"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_16sdp"
+        android:fontFamily="@font/ubuntu_regular"
+        android:includeFontPadding="false"
+        android:text="@string/let_we_start"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13ssp"
+        app:layout_constraintBottom_toTopOf="@id/btnEditNewImage"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:includeFontPadding="false"
+        android:text="@string/image_filters_app"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintBottom_toTopOf="@id/tvSubtitle"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
