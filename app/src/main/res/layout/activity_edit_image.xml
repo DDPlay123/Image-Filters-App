@@ -104,4 +104,13 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:listitem="@layout/item_container_filter" />
 
+    <ProgressBar
+        android:id="@+id/pbFilters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/rvFilters"
+        app:layout_constraintEnd_toEndOf="@id/rvFilters"
+        app:layout_constraintStart_toStartOf="@id/rvFilters"
+        app:layout_constraintTop_toTopOf="@id/rvFilters"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

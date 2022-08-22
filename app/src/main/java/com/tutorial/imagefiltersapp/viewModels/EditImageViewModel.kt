@@ -5,11 +5,15 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.tutorial.imagefiltersapp.models.ImageFilter
+import com.tutorial.imagefiltersapp.models.ImageFiltersDataState
 import com.tutorial.imagefiltersapp.models.ImagePreviewDataState
 import com.tutorial.imagefiltersapp.repositiories.EditImageRepository
 import com.tutorial.imagefiltersapp.utilities.Coroutines
 
 class EditImageViewModel(private val editImageRepository: EditImageRepository): ViewModel() {
+
+    // region::  圖片預覽
 
     private val imagePreviewState = MutableLiveData<ImagePreviewDataState>()
 
@@ -38,8 +42,50 @@ class EditImageViewModel(private val editImageRepository: EditImageRepository): 
                 else
                     emitPreviewUiState(error = "無法獲得相片預覽")
             }.onFailure { throwable ->
-                emitPreviewUiState(error = throwable.message)
+                emitPreviewUiState(error = throwable.message.toString())
             }
         }
     }
+    // endregion
+
+    // region::  載入濾鏡
+    private val imageFiltersDataState = MutableLiveData<ImageFiltersDataState>()
+
+    // 取得 imageFiltersDataState
+    val imageFiltersUiState: LiveData<ImageFiltersDataState>
+        get() {
+            return imageFiltersDataState
+        }
+
+    // 設定狀態至 imageFiltersDataState
+    private fun emitImageFiltersUiState(isLoading: Boolean = false,
+                                        imageFilters: List<ImageFilter>? = null,
+                                        error: String? = null) {
+        val dataState = ImageFiltersDataState(isLoading, imageFilters, error)
+        imageFiltersDataState.postValue(dataState)
+    }
+
+    // 取得預覽圖
+    private fun getPreviewImage(originalImage: Bitmap): Bitmap {
+        return runCatching {
+            val previewWidth = 150
+            val previewHeight = originalImage.height * previewWidth / originalImage.width
+
+            Bitmap.createScaledBitmap(originalImage, previewWidth, previewHeight, false)
+        }.getOrDefault(originalImage)
+    }
+
+    fun loadImageFilters(originalImage: Bitmap) {
+        Coroutines.io {
+            runCatching {
+                emitImageFiltersUiState(isLoading = true)
+                editImageRepository.getImageFilters(getPreviewImage(originalImage))
+            }.onSuccess { imageFilters ->
+                emitImageFiltersUiState(imageFilters = imageFilters)
+            }.onFailure { throwable ->
+                emitImageFiltersUiState(error = throwable.message.toString())
+            }
+        }
+    }
+    // endregion
 }

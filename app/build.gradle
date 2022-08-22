@@ -55,4 +55,6 @@ dependencies {
     implementation "io.insert-koin:koin-android:3.2.0"
     // ViewModel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    // GPU image
+    implementation 'jp.co.cyberagent.android:gpuimage:2.1.0'
 }

@@ -1,14 +1,15 @@
 package com.tutorial.imagefiltersapp.activity
 
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.tutorial.imagefiltersapp.KEY_IMAGE_URI
+import com.tutorial.imagefiltersapp.adapter.ImageFiltersAdapter
 import com.tutorial.imagefiltersapp.databinding.ActivityEditImageBinding
 import com.tutorial.imagefiltersapp.helper.displayToast
 import com.tutorial.imagefiltersapp.helper.show
+import com.tutorial.imagefiltersapp.models.ImageFiltersDataState
 import com.tutorial.imagefiltersapp.viewModels.EditImageViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,6 +28,12 @@ class EditImageActivity : AppCompatActivity() {
         prepareImagePreview()
     }
 
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        if (level <= TRIM_MEMORY_BACKGROUND)
+            System.gc()
+    }
+
     private fun setListener() {
         binding.run {
             layoutBack.setOnClickListener { onBackPressed() }
@@ -43,6 +50,23 @@ class EditImageActivity : AppCompatActivity() {
             dataState.bitmap?.let { bitmap ->
                 binding.imagePreview.setImageBitmap(bitmap)
                 binding.imagePreview.show()
+                viewModel.loadImageFilters(bitmap)
+            } ?: kotlin.run {
+                dataState.error?.let { error ->
+                    displayToast(error)
+                }
+            }
+        }
+
+        viewModel.imageFiltersUiState.observe(this) {
+            val dataState = it ?: return@observe
+            binding.pbFilters.visibility =
+                if (dataState.isLoading == true) View.VISIBLE else View.GONE
+
+            dataState.imageFilters?.let { imageFilters ->
+                ImageFiltersAdapter(imageFilters).also { adapter ->
+                    binding.rvFilters.adapter = adapter
+                }
             } ?: kotlin.run {
                 dataState.error?.let { error ->
                     displayToast(error)
