@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.tutorial.imagefiltersapp.KEY_FILTERED_IMAGE_URI
-import com.tutorial.imagefiltersapp.R
 import com.tutorial.imagefiltersapp.databinding.ActivityFilteredImageBinding
 
 class FilteredImageActivity : AppCompatActivity() {

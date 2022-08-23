@@ -51,6 +51,11 @@ class MainActivity : AppCompatActivity() {
                         mPickImage.launch(pickIntent)
                     }
             }
+            btnSavedImages.setOnClickListener {
+                Intent(applicationContext, SavedImageActivity::class.java).also {
+                    startActivity(it)
+                }
+            }
         }
     }
 

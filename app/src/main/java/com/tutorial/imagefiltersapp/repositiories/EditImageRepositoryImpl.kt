@@ -13,7 +13,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
-// 搭被 Koin DI
+// for Koin DI
 class EditImageRepositoryImpl(private val context: Context): EditImageRepository {
 
     override suspend fun prepareImagePreview(imageUri: Uri): Bitmap? {

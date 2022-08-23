@@ -14,7 +14,6 @@ import com.tutorial.imagefiltersapp.databinding.ActivityEditImageBinding
 import com.tutorial.imagefiltersapp.helper.displayToast
 import com.tutorial.imagefiltersapp.helper.show
 import com.tutorial.imagefiltersapp.models.ImageFilter
-import com.tutorial.imagefiltersapp.models.ImageFiltersDataState
 import com.tutorial.imagefiltersapp.viewModels.EditImageViewModel
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import org.koin.androidx.viewmodel.ext.android.viewModel
