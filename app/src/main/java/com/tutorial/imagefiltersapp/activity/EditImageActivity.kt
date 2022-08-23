@@ -1,11 +1,13 @@
 package com.tutorial.imagefiltersapp.activity
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.MutableLiveData
+import com.tutorial.imagefiltersapp.KEY_FILTERED_IMAGE_URI
 import com.tutorial.imagefiltersapp.KEY_IMAGE_URI
 import com.tutorial.imagefiltersapp.adapter.ImageFiltersAdapter
 import com.tutorial.imagefiltersapp.databinding.ActivityEditImageBinding
@@ -63,6 +65,12 @@ class EditImageActivity : AppCompatActivity(), ImageFiltersAdapter.ImageFilterLi
             imagePreview.setOnClickListener {
                 imagePreview.setImageBitmap(filteredBitmap.value)
             }
+
+            imageSave.setOnClickListener {
+                filteredBitmap.value?.let { bitmap ->
+                    viewModel.saveFilteredImage(bitmap)
+                }
+            }
         }
     }
 
@@ -108,6 +116,30 @@ class EditImageActivity : AppCompatActivity(), ImageFiltersAdapter.ImageFilterLi
 
         filteredBitmap.observe(this) { bitmap ->
             binding.imagePreview.setImageBitmap(bitmap)
+        }
+
+        viewModel.saveFilteredImageUiState.observe(this) {
+            val saveFilteredImageDataState = it ?: return@observe
+            if (saveFilteredImageDataState.isLoading == true) {
+                binding.imageSave.visibility = View.GONE
+                binding.pbSaving.visibility = View.VISIBLE
+            } else {
+                binding.pbSaving.visibility = View.GONE
+                binding.imageSave.visibility = View.VISIBLE
+            }
+            saveFilteredImageDataState.uri?.let { savedImageUri ->
+                Intent(
+                    applicationContext,
+                    FilteredImageActivity::class.java
+                ).also { filteredImageIntent ->
+                    filteredImageIntent.putExtra(KEY_FILTERED_IMAGE_URI, savedImageUri)
+                    startActivity(filteredImageIntent)
+                }
+            } ?: kotlin.run {
+                saveFilteredImageDataState.error?.let { error ->
+                    displayToast(error)
+                }
+            }
         }
     }
 

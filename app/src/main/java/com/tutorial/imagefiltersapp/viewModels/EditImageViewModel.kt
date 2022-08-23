@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.tutorial.imagefiltersapp.models.ImageFilter
 import com.tutorial.imagefiltersapp.models.ImageFiltersDataState
 import com.tutorial.imagefiltersapp.models.ImagePreviewDataState
+import com.tutorial.imagefiltersapp.models.SaveFilteredImageDataState
 import com.tutorial.imagefiltersapp.repositiories.EditImageRepository
 import com.tutorial.imagefiltersapp.utilities.Coroutines
 
@@ -84,6 +85,38 @@ class EditImageViewModel(private val editImageRepository: EditImageRepository): 
                 emitImageFiltersUiState(imageFilters = imageFilters)
             }.onFailure { throwable ->
                 emitImageFiltersUiState(error = throwable.message.toString())
+            }
+        }
+    }
+    // endregion
+
+    // region::  儲存圖片
+    private val saveFilteredImageDataState = MutableLiveData<SaveFilteredImageDataState>()
+
+    // 取得 saveFilteredImageDataState
+    val saveFilteredImageUiState: LiveData<SaveFilteredImageDataState>
+        get() {
+            return saveFilteredImageDataState
+        }
+
+    // 設定狀態至 saveFilteredImageDataState
+    private fun emitSaveFilteredImageUiState(isLoading: Boolean = false,
+                                             uri: Uri? = null,
+                                             error: String? = null) {
+        val dataState = SaveFilteredImageDataState(isLoading, uri, error)
+        saveFilteredImageDataState.postValue(dataState)
+    }
+
+    fun saveFilteredImage(filterBitmap: Bitmap) {
+        Coroutines.io {
+            runCatching {
+                emitSaveFilteredImageUiState(isLoading = true)
+                editImageRepository.saveFilteredImage(filterBitmap)
+            }.onSuccess { savedImageUri ->
+                if (savedImageUri != null)
+                    emitSaveFilteredImageUiState(uri = savedImageUri)
+            }.onFailure { throwable ->
+                emitPreviewUiState(error = throwable.message.toString())
             }
         }
     }

@@ -4,9 +4,13 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Environment
+import androidx.core.content.FileProvider
 import com.tutorial.imagefiltersapp.models.ImageFilter
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.*
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 
 // 搭被 Koin DI
@@ -422,6 +426,31 @@ class EditImageRepositoryImpl(private val context: Context): EditImageRepository
         return imageFilters
     }
 
+    override suspend fun saveFilteredImage(filteredBitmap: Bitmap): Uri? {
+        return try {
+            val mediaStorageDirectory = File(
+                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "Saved Images"
+            )
+            if (!mediaStorageDirectory.exists())
+                mediaStorageDirectory.mkdir()
+            val fileName = "IMG_${System.currentTimeMillis()}.jpg"
+            val file = File(mediaStorageDirectory, fileName)
+            saveFile(file, filteredBitmap)
+            FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+        } catch (exception: Exception) {
+            null
+        }
+    }
+
     private fun getInputStreamFromUri(uri: Uri): InputStream? =
         context.contentResolver.openInputStream(uri)
+
+    private fun saveFile(file: File, bitmap: Bitmap) {
+        with(FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, this)
+            flush()
+            close()
+        }
+    }
 }
