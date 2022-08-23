@@ -35,7 +35,7 @@ class EditImageRepositoryImpl(private val context: Context): EditImageRepository
             gpuImage.setFilter(filter)
             imageFilters.add(
                 ImageFilter(
-                    name = "原圖",
+                    name = "Normal",
                     filter = filter,
                     filterPreview = gpuImage.bitmapWithFilterApplied
                 )
@@ -55,7 +55,7 @@ class EditImageRepositoryImpl(private val context: Context): EditImageRepository
             gpuImage.setFilter(filter)
             imageFilters.add(
                 ImageFilter(
-                    name = "復古風",
+                    name = "retro",
                     filter = filter,
                     filterPreview = gpuImage.bitmapWithFilterApplied
                 )
